@@ -31,14 +31,19 @@ class TodoApp extends React.Component {
 				},
 			],
 			value: '',
+			filter: 'all',
 		};
 
+		this.handleTabClick = this.handleTabClick.bind(this);
 		this.handleCheck = this.handleCheck.bind(this);
 		this.handleRemove = this.handleRemove.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}
 
+	handleTabClick(filter) {
+		this.setState({ filter });
+	}
 	handleCheck(e, id) {
 		const newTodos = this.state.todos.slice();
 		newTodos.find(todo => todo.id === id).isChecked = e.target.checked;
@@ -74,14 +79,35 @@ class TodoApp extends React.Component {
 			<div className="box">
 				<div className="tabs is-centered">
 					<ul>
-						<li className="is-active"><a>All</a></li>
-						<li><a>Pending</a></li>
-						<li><a>Done</a></li>
+						<li
+							className={this.state.filter === 'all' ?
+								'is-active' : ''}
+							onClick={() => this.handleTabClick('all')}
+						><a>All</a></li>
+						<li
+							className={this.state.filter === 'pending' ?
+								'is-active' : ''}
+							onClick={() => this.handleTabClick('pending')}
+						><a>Pending</a></li>
+						<li
+							className={this.state.filter === 'done' ?
+								'is-active' : ''}
+							onClick={() => this.handleTabClick('done')}
+						><a>Done</a></li>
 					</ul>
 				</div>
 
 				<div className="content">
-					{this.state.todos.map(todo => (
+					{this.state.todos.filter(todo => {
+						if (this.state.filter === 'all') {
+							return true;
+						} else if (this.state.filter === 'pending') {
+							return !todo.isChecked;
+						} else if (this.state.filter === 'done') {
+							return todo.isChecked;
+						}
+						return true;
+					}).map(todo => (
 						<p key={todo.id} className="control">
 							<label className="checkbox">
 								<input
