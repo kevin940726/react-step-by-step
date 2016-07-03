@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import '../css/todo.global.css';
 
-$('document').ready(() => {
+const main = () => {
 	// handle add new todo
 	$('form').submit(e => {
 		e.preventDefault();
@@ -74,4 +74,6 @@ $('document').ready(() => {
 	$('.content').on('click', '.checkbox .icon', function () {
 		$(this).parents('.control').remove();
 	});
-});
+};
+
+export default main;

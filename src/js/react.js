@@ -1,9 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import { render } from 'react-dom';
 import { generate } from 'shortid';
 import '../css/todo.global.css';
-import flexibility from 'flexibility';
 
 const Tab = ({ text, isActive, onClick }) => (
 	<li
@@ -41,7 +39,6 @@ const Todo = ({ isChecked, text, handleCheck, handleRemove }) => (
 				type="checkbox"
 				checked={isChecked}
 				onChange={handleCheck}
-				style={{ marginRight: '10px' }}
 			/>
 			{text}
 			<span
@@ -197,8 +194,5 @@ class TodoApp extends React.Component {
 	}
 }
 
-render(
-	<TodoApp />,
-	document.getElementById('root'),
-	() => flexibility(document.getElementById('root'))
-);
+
+export default TodoApp;

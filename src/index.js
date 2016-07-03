@@ -15,13 +15,26 @@ const routingCallback = (view, data = {}) => (ctx, next) => {
 
 const noop = () => {};
 
+page('/', routingCallback('home'), noop);
 page('/vanilla', routingCallback('vanilla'), () => {
-	require.ensure([], require => require('./js/vanilla'));
+	require.ensure([], require => {
+		const $ = require('jquery');
+		const main = require('./js/vanilla').default;
+		$(document).ready(main);
+	});
 });
 page('/react', routingCallback('react'), () => {
-	require.ensure([], require => require('./js/react'));
+	require.ensure([], require => {
+		const React = require('react');
+		const { render } = require('react-dom');
+		const TodoApp = require('./js/react').default;
+		render(
+			<TodoApp />,
+			document.getElementById('root')
+		);
+	});
 });
-page('*', routingCallback('404'), noop);
+page('*', routingCallback('home'), noop);
 page.start();
 
 // offline plugin install

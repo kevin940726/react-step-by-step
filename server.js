@@ -10,15 +10,24 @@ var argv = require('yargs')
     .default('d', packageConfig.DELAY || 500)
     .argv;
 var jsonServer = require('json-server');
-var pause = require('connect-pause');
 
-var PORT = argv.p;
-var DB_PORT = argv.a;
-var DELAY = argv.d;
+// re-implementation of connect-pause for handling delay of 0
+var pause = function(delay, err) {
+    delay = delay || 0; // original is 1000
+
+    return function(req, res, next) {
+        setTimeout(next, delay, err);
+    };
+};
+
+var PORT = parseInt(argv.p, 10);
+var DB_PORT = parseInt(argv.a, 10);
+var DELAY = parseInt(argv.d, 10);
 
 new WebpackDevServer(webpack(config), {
   publicPath: config.output.publicPath,
   hot: true,
+  inline: true,
   noInfo: true,
   historyApiFallback: true,
 }).listen(PORT, '0.0.0.0', function (err, result) {

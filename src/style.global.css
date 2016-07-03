@@ -7,16 +7,29 @@ body {
 	padding: 0;
 	height: 100%;
 	width: 100%;
-	font-family: 'Open Sans', 'Noto Sans TC', sans-serif;
 }
 
 body {
 	font-family: 'Roboto', 'Noto Sans TC', sans-serif;
-}
-
-#view {
-	height: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+#app {
+	width: 300px;
+	min-height: 400px;
+	display: flex;
+	flex-direction: column;
+	padding: 30px;
+}
+
+nav.nav {
+	background-color: transparent;
+	justify-content: center;
+}
+
+#view {
+	display: inline-block;
+	width: auto;
 }

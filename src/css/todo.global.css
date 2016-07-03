@@ -1,6 +1,10 @@
 .checkbox {
 	width: 100%;
 
+	& > input {
+		margin-right: 10px;
+	}
+
 	& .icon {
 		opacity: 0;
 		transition: opacity 0.1s ease-out, color 0.1s ease-out;
