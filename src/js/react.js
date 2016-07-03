@@ -30,6 +30,25 @@ class TodoApp extends React.Component {
 				},
 			],
 		};
+
+		this.handleCheck = this.handleCheck.bind(this);
+		this.handleRemove = this.handleRemove.bind(this);
+	}
+
+	handleCheck(e, id) {
+		const newTodos = this.state.todos.slice();
+		newTodos.find(todo => todo.id === id).isChecked = e.target.checked;
+
+		this.setState({
+			todos: newTodos,
+		});
+	}
+	handleRemove(e, id) {
+		e.stopPropagation();
+
+		this.setState({
+			todos: this.state.todos.filter(todo => todo.id !== id),
+		});
 	}
 
 	render() {
@@ -50,9 +69,13 @@ class TodoApp extends React.Component {
 								<input
 									type="checkbox"
 									checked={todo.isChecked}
+									onChange={e => this.handleCheck(e, todo.id)}
 								/>
 								{todo.text}
-								<span className="icon is-small">
+								<span
+									className="icon is-small"
+									onClick={e => this.handleRemove(e, todo.id)}
+								>
 									<i className="fa fa-times"></i>
 								</span>
 							</label>
