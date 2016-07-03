@@ -19,6 +19,10 @@ const questions = [
 				name: 'step 3',
 				value: '6b00fccb9b466f43036e0783d32ae8b2aefb8d9d',
 			},
+			{
+				name: 'final step',
+				value: 'HEAD',
+			},
 		],
 	},
 ];
@@ -26,8 +30,16 @@ const questions = [
 const prompt = () => {
 	inquirer.prompt(questions)
 		.then(answers => {
-			shelljs.exec(`git checkout ${answers.step}`);
-			prompt();
+			shelljs.exec(
+				`git checkout ${answers.step}`,
+				{ silent: true },
+				(code, stdout, stderr) => {
+					if (stderr) throw new Error(stderr);
+
+					console.log(stdout);
+					prompt();
+				}
+			);
 		});
 };
 
