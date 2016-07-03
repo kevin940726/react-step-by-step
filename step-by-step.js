@@ -1,23 +1,34 @@
 import inquirer from 'inquirer';
 import shelljs from 'shelljs';
 
-const gitlog = shelljs.exec('git log', { silent: true }).stdout;
-
-console.log(gitlog);
-
-inquirer.prompt([
+const questions = [
 	{
 		type: 'list',
-		name: 'Steps',
+		name: 'step',
 		message: 'Choose a step to jump to.',
 		choices: [
-			'step 1',
-			'step 2',
-			'step 3',
-			'step 4',
-			'step 5',
+			{
+				name: 'step 1',
+				value: 'f666178b01bbc1aee6acb31d2ac98065711c2b2c',
+			},
+			{
+				name: 'step 2',
+				value: 'ae5c5b486ec4952ff17a94b4f40753868b7aa280',
+			},
+			{
+				name: 'step 3',
+				value: '6b00fccb9b466f43036e0783d32ae8b2aefb8d9d',
+			},
 		],
 	},
-]).then(answers => {
-	console.log(JSON.stringify(answers, null, '  '));
-});
+];
+
+const prompt = () => {
+	inquirer.prompt(questions)
+		.then(answers => {
+			shelljs.exec(`git checkout ${answers.step}`);
+			prompt();
+		});
+};
+
+prompt();
