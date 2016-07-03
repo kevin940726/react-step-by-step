@@ -130,7 +130,7 @@ class TodoApp extends React.Component {
 		this.handleRemove = this.handleRemove.bind(this);
 	}
 	componentDidMount() {
-		fetch('http://10.0.1.132:8001/todos')
+		fetch('http://localhost:8001/todos')
 			.then(res => res.json())
 			.then(todos => {
 				this.setState({ todos, loading: false });
@@ -193,6 +193,5 @@ class TodoApp extends React.Component {
 		);
 	}
 }
-
 
 export default TodoApp;
