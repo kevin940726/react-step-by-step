@@ -33,9 +33,7 @@ const prompt = () => {
 			shelljs.exec(
 				`git checkout ${answers.step}`,
 				{ silent: true },
-				(code, stdout, stderr) => {
-					if (stderr) throw new Error(stderr);
-
+				(code, stdout) => {
 					console.log(stdout);
 					prompt();
 				}
