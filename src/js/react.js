@@ -1,5 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
+import { generate } from 'shortid';
 import '../css/todo.global.css';
 
 class TodoApp extends React.Component {
@@ -29,10 +30,13 @@ class TodoApp extends React.Component {
 					isChecked: false,
 				},
 			],
+			value: '',
 		};
 
 		this.handleCheck = this.handleCheck.bind(this);
 		this.handleRemove = this.handleRemove.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleChange = this.handleChange.bind(this);
 	}
 
 	handleCheck(e, id) {
@@ -49,6 +53,20 @@ class TodoApp extends React.Component {
 		this.setState({
 			todos: this.state.todos.filter(todo => todo.id !== id),
 		});
+	}
+	handleSubmit(e) {
+		e.preventDefault();
+
+		this.setState({
+			todos: [
+				...this.state.todos,
+				{ id: generate(), text: this.state.value, isChecked: false },
+			],
+			value: '',
+		});
+	}
+	handleChange(e) {
+		this.setState({ value: e.target.value });
 	}
 
 	render() {
@@ -83,12 +101,14 @@ class TodoApp extends React.Component {
 					))}
 				</div>
 
-				<form className="control">
+				<form className="control" onSubmit={this.handleSubmit}>
 					<input
 						id="input-todo"
 						className="input"
 						type="text"
 						placeholder="Add some todos..."
+						value={this.state.value}
+						onChange={this.handleChange}
 					/>
 				</form>
 			</div>
