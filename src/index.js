@@ -23,17 +23,6 @@ page('/vanilla', routingCallback('vanilla'), () => {
 		$(document).ready(main);
 	});
 });
-page('/react', routingCallback('react'), () => {
-	require.ensure([], require => {
-		const React = require('react');
-		const { render } = require('react-dom');
-		const TodoApp = require('./js/react').default;
-		render(
-			<TodoApp />,
-			document.getElementById('root')
-		);
-	});
-});
 page('*', routingCallback('home'), noop);
 page.start();
 
