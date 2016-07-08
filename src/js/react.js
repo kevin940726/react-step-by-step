@@ -3,6 +3,97 @@ import React from 'react';
 import { generate } from 'shortid';
 import '../css/todo.global.css';
 
+const Tabs = ({ filter, handleTabClick }) => (
+	<div className="tabs is-centered">
+		<ul>
+			<li
+				className={filter === 'all' ?
+					'is-active' : ''}
+				onClick={() => handleTabClick('all')}
+			><a>All</a></li>
+			<li
+				className={filter === 'pending' ?
+					'is-active' : ''}
+				onClick={() => handleTabClick('pending')}
+			><a>Pending</a></li>
+			<li
+				className={filter === 'done' ?
+					'is-active' : ''}
+				onClick={() => handleTabClick('done')}
+			><a>Done</a></li>
+		</ul>
+	</div>
+);
+
+const Todos = ({ todos, filter, handleCheck, handleRemove }) => (
+	<div className="content">
+		{todos.filter(todo => {
+			if (filter === 'all') {
+				return true;
+			} else if (filter === 'pending') {
+				return !todo.isChecked;
+			} else if (filter === 'done') {
+				return todo.isChecked;
+			}
+			return true;
+		}).map(todo => (
+			<p key={todo.id} className="control">
+				<label className="checkbox">
+					<input
+						type="checkbox"
+						checked={todo.isChecked}
+						onChange={e => handleCheck(e, todo.id)}
+					/>
+					{todo.text}
+					<span
+						className="icon is-small"
+						onClick={e => handleRemove(e, todo.id)}
+					>
+						<i className="fa fa-times"></i>
+					</span>
+				</label>
+			</p>
+		))}
+	</div>
+);
+
+class AddTodo extends React.Component {
+	constructor(props) {
+		super(props);
+
+		this.state = { value: '' };
+
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+	}
+
+	handleSubmit(e) {
+		e.preventDefault();
+
+		this.setState({ value: '' });
+
+		this.props.handleSubmit(this.state.value);
+	}
+	handleChange(e) {
+		this.setState({ value: e.target.value });
+	}
+
+	render() {
+		return (
+			<form className="control" onSubmit={this.handleSubmit}>
+				<input
+					id="input-todo"
+					className="input"
+					type="text"
+					placeholder="Add some todos..."
+					value={this.state.value}
+					onChange={this.handleChange}
+				/>
+			</form>
+		);
+	}
+}
+
 class TodoApp extends React.Component {
 	constructor() {
 		super();
@@ -38,7 +129,6 @@ class TodoApp extends React.Component {
 		this.handleCheck = this.handleCheck.bind(this);
 		this.handleRemove = this.handleRemove.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
-		this.handleChange = this.handleChange.bind(this);
 	}
 
 	handleTabClick(filter) {
@@ -59,84 +149,31 @@ class TodoApp extends React.Component {
 			todos: this.state.todos.filter(todo => todo.id !== id),
 		});
 	}
-	handleSubmit(e) {
-		e.preventDefault();
-
+	handleSubmit(value) {
 		this.setState({
 			todos: [
 				...this.state.todos,
-				{ id: generate(), text: this.state.value, isChecked: false },
+				{ id: generate(), text: value, isChecked: false },
 			],
-			value: '',
 		});
-	}
-	handleChange(e) {
-		this.setState({ value: e.target.value });
 	}
 
 	render() {
 		return (
 			<div className="box">
-				<div className="tabs is-centered">
-					<ul>
-						<li
-							className={this.state.filter === 'all' ?
-								'is-active' : ''}
-							onClick={() => this.handleTabClick('all')}
-						><a>All</a></li>
-						<li
-							className={this.state.filter === 'pending' ?
-								'is-active' : ''}
-							onClick={() => this.handleTabClick('pending')}
-						><a>Pending</a></li>
-						<li
-							className={this.state.filter === 'done' ?
-								'is-active' : ''}
-							onClick={() => this.handleTabClick('done')}
-						><a>Done</a></li>
-					</ul>
-				</div>
+				<Tabs
+					filter={this.state.filter}
+					handleTabClick={this.handleTabClick}
+				/>
 
-				<div className="content">
-					{this.state.todos.filter(todo => {
-						if (this.state.filter === 'all') {
-							return true;
-						} else if (this.state.filter === 'pending') {
-							return !todo.isChecked;
-						} else if (this.state.filter === 'done') {
-							return todo.isChecked;
-						}
-						return true;
-					}).map(todo => (
-						<p key={todo.id} className="control">
-							<label className="checkbox">
-								<input
-									type="checkbox"
-									checked={todo.isChecked}
-									onChange={e => this.handleCheck(e, todo.id)}
-								/>
-								{todo.text}
-								<span
-									className="icon is-small"
-									onClick={e => this.handleRemove(e, todo.id)}
-								>
-									<i className="fa fa-times"></i>
-								</span>
-							</label>
-						</p>
-					))}
-				</div>
+				<Todos
+					todos={this.state.todos}
+					filter={this.state.filter}
+					handleCheck={this.handleCheck}
+					handleRemove={this.handleRemove}
+				/>
 
-				<form className="control" onSubmit={this.handleSubmit}>
-					<input
-						id="input-todo"
-						className="input"
-						type="text"
-						placeholder="Add some todos..."
-						value={this.state.value}
-						onChange={this.handleChange}
-					/>
-				</form>
+				<AddTodo handleSubmit={this.handleSubmit} />
 			</div>
 		);
 	}
