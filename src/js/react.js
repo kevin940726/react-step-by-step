@@ -3,116 +3,96 @@ import React from 'react';
 import { generate } from 'shortid';
 import '../css/todo.global.css';
 
-const Tab = ({ text, isActive, onClick }) => (
-	<li
-		className={isActive ? 'is-active' : ''}
-		onClick={onClick}
-	><a>{text}</a></li>
-);
-
 const Tabs = ({ filter, handleTabClick }) => (
 	<div className="tabs is-centered">
 		<ul>
-			<Tab
-				text="All"
-				isActive={filter === 'all'}
+			<li
+				className={filter === 'all' ?
+					'is-active' : ''}
 				onClick={() => handleTabClick('all')}
-			/>
-			<Tab
-				text="Pending"
-				isActive={filter === 'pending'}
+			><a>All</a></li>
+			<li
+				className={filter === 'pending' ?
+					'is-active' : ''}
 				onClick={() => handleTabClick('pending')}
-			/>
-			<Tab
-				text="Done"
-				isActive={filter === 'done'}
+			><a>Pending</a></li>
+			<li
+				className={filter === 'done' ?
+					'is-active' : ''}
 				onClick={() => handleTabClick('done')}
-			/>
+			><a>Done</a></li>
 		</ul>
 	</div>
 );
 
-const Todo = ({ isChecked, text, handleCheck, handleRemove }) => (
-	<p className="control">
-		<label className="checkbox">
-			<input
-				type="checkbox"
-				checked={isChecked}
-				onChange={handleCheck}
-			/>
-			{text}
-			<span
-				className="icon is-small"
-				onClick={handleRemove}
-			>
-				<i className="fa fa-times"></i>
-			</span>
-		</label>
-	</p>
-);
-
 const Todos = ({ todos, filter, handleCheck, handleRemove }) => (
 	<div className="content">
-		{todos.length ?
-			todos.map(todo => (
-				<Todo
-					key={todo.id}
-					{...todo}
-					handleCheck={e => handleCheck(e, todo.id)}
-					handleRemove={e => handleRemove(e, todo.id)}
-				/>
-			)) :
-			(() => {
-				if (filter === 'all') {
-					return 'No todos at all.';
-				} else if (filter === 'pending') {
-					return 'All done!';
-				} else if (filter === 'done') {
-					return 'Do something please...';
-				}
-				return 'Loading...';
-			})()
-		}
+		{todos.filter(todo => {
+			if (filter === 'all') {
+				return true;
+			} else if (filter === 'pending') {
+				return !todo.isChecked;
+			} else if (filter === 'done') {
+				return todo.isChecked;
+			}
+			return true;
+		}).map(todo => (
+			<p key={todo.id} className="control">
+				<label className="checkbox">
+					<input
+						type="checkbox"
+						checked={todo.isChecked}
+						onChange={e => handleCheck(e, todo.id)}
+					/>
+					{todo.text}
+					<span
+						className="icon is-small"
+						onClick={e => handleRemove(e, todo.id)}
+					>
+						<i className="fa fa-times"></i>
+					</span>
+				</label>
+			</p>
+		))}
 	</div>
 );
 
 class AddTodo extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		this.state = { value: '' };
 
-		this.onChange = this.onChange.bind(this);
-		this.onSubmit = this.onSubmit.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleChange = this.handleChange.bind(this);
 	}
 
-	onSubmit(e) {
+	handleSubmit(e) {
 		e.preventDefault();
 
-		this.props.handleSubmit(this.state.value);
-
 		this.setState({ value: '' });
+
+		this.props.handleSubmit(this.state.value);
 	}
-	onChange(e) {
+	handleChange(e) {
 		this.setState({ value: e.target.value });
 	}
 
 	render() {
 		return (
-			<form className="control" onSubmit={this.onSubmit}>
+			<form className="control" onSubmit={this.handleSubmit}>
 				<input
 					id="input-todo"
 					className="input"
 					type="text"
 					placeholder="Add some todos..."
 					value={this.state.value}
-					onChange={this.onChange}
+					onChange={this.handleChange}
 				/>
 			</form>
 		);
 	}
 }
-
 
 class TodoApp extends React.Component {
 	constructor() {
@@ -121,32 +101,23 @@ class TodoApp extends React.Component {
 		this.state = {
 			todos: [],
 			filter: 'all',
-			loading: true,
 		};
 
 		this.handleTabClick = this.handleTabClick.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleCheck = this.handleCheck.bind(this);
 		this.handleRemove = this.handleRemove.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 	componentDidMount() {
 		fetch('http://localhost:8001/todos')
-			.then(res => res.json())
+			.then(response => response.json())
 			.then(todos => {
-				this.setState({ todos, loading: false });
+				this.setState({ todos });
 			});
 	}
 
 	handleTabClick(filter) {
 		this.setState({ filter });
-	}
-	handleSubmit(value) {
-		this.setState({
-			todos: [
-				...this.state.todos,
-				{ id: generate(), text: value, isChecked: false },
-			],
-		});
 	}
 	handleCheck(e, id) {
 		const newTodos = this.state.todos.slice();
@@ -163,6 +134,14 @@ class TodoApp extends React.Component {
 			todos: this.state.todos.filter(todo => todo.id !== id),
 		});
 	}
+	handleSubmit(value) {
+		this.setState({
+			todos: [
+				...this.state.todos,
+				{ id: generate(), text: value, isChecked: false },
+			],
+		});
+	}
 
 	render() {
 		return (
@@ -171,23 +150,14 @@ class TodoApp extends React.Component {
 					filter={this.state.filter}
 					handleTabClick={this.handleTabClick}
 				/>
+
 				<Todos
-					todos={this.state.todos
-						.filter(todo => {
-							if (this.state.filter === 'all') {
-								return true;
-							} else if (this.state.filter === 'pending') {
-								return !todo.isChecked;
-							} else if (this.state.filter === 'done') {
-								return todo.isChecked;
-							}
-							return true;
-						})
-					}
+					todos={this.state.todos}
 					filter={this.state.filter}
 					handleCheck={this.handleCheck}
 					handleRemove={this.handleRemove}
 				/>
+
 				<AddTodo handleSubmit={this.handleSubmit} />
 			</div>
 		);
