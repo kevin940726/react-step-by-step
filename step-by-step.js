@@ -1,6 +1,6 @@
-import inquirer from 'inquirer';
-import shelljs from 'shelljs';
-import chalk from 'chalk';
+const inquirer = require('inquirer');
+const shelljs = require('shelljs');
+const chalk = require('chalk');
 
 const question = {
 	type: 'list',
@@ -8,7 +8,7 @@ const question = {
 	message: 'Choose a step to jump to.',
 	choices: [
 		{
-			name: 'Step 0',
+			name: 'STEP 0',
 			value: {
 				index: 0,
 				step: '0',
@@ -17,7 +17,7 @@ const question = {
 			},
 		},
 		{
-			name: 'Step 1',
+			name: 'STEP 1',
 			value: {
 				index: 1,
 				step: '1',
@@ -26,7 +26,7 @@ const question = {
 			},
 		},
 		{
-			name: 'Step 2',
+			name: 'STEP 2',
 			value: {
 				index: 2,
 				step: '2',
@@ -35,7 +35,7 @@ const question = {
 			},
 		},
 		{
-			name: 'Step 3',
+			name: 'STEP 3',
 			value: {
 				index: 3,
 				step: '3',
@@ -44,7 +44,7 @@ const question = {
 			},
 		},
 		{
-			name: 'Step 4',
+			name: 'STEP 4',
 			value: {
 				index: 4,
 				step: '4',
@@ -53,7 +53,7 @@ const question = {
 			},
 		},
 		{
-			name: 'Step 5',
+			name: 'STEP 5',
 			value: {
 				index: 5,
 				step: '5',
@@ -62,7 +62,7 @@ const question = {
 			},
 		},
 		{
-			name: 'Step 6',
+			name: 'STEP 6',
 			value: {
 				index: 6,
 				step: '6',
@@ -71,7 +71,7 @@ const question = {
 			},
 		},
 		{
-			name: 'Step 7',
+			name: 'STEP 7',
 			value: {
 				index: 7,
 				step: '7',
@@ -80,7 +80,7 @@ const question = {
 			},
 		},
 		{
-			name: 'Step 8',
+			name: 'STEP 8',
 			value: {
 				index: 8,
 				step: '8',
@@ -100,22 +100,30 @@ const question = {
 };
 
 const prompt = defaultStep => {
-	inquirer.prompt([{
-		...question,
+	inquirer.prompt([Object.assign({}, question, {
 		default: defaultStep,
-	}]).then(answers => {
+	})]).then(answers => {
 		const answer = answers.step;
 
+		if (answer.step === 'exit') {
+			shelljs.exec('git checkout -f master', { silent: true });
+			return;
+		}
+
+		const lastStep = question.choices[(answer.index || 1) - 1].value.hash;
+
 		shelljs.exec(
-			`git checkout -f ${answer.hash}`,
+			`git checkout -f ${lastStep};
+			git diff ${lastStep} ${answer.hash} | git apply`,
 			{ silent: true }
 		);
 
-		console.log(chalk.gray(`You are now in step ${chalk.underline.bgYellow(answer.step)}`));
-		console.log(chalk.green(answer.description));
-		if (answer.step !== 'final') {
-			prompt(answer.index);
-		}
+		console.log(chalk.dim('===================================================================='));
+		console.log(chalk.gray(`You are now in ${chalk.bold(`STEP ${answer.step}`)}`));
+		console.log(chalk.underline('In this step:'));
+		console.log(chalk.green(`\t${answer.description}`));
+		console.log(chalk.dim('===================================================================='));
+		prompt(answer.index);
 	});
 };
 
