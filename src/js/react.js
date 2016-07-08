@@ -121,7 +121,6 @@ class TodoApp extends React.Component {
 					isChecked: false,
 				},
 			],
-			value: '',
 			filter: 'all',
 		};
 
