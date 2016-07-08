@@ -99,28 +99,7 @@ class TodoApp extends React.Component {
 		super();
 
 		this.state = {
-			todos: [
-				{
-					id: '1',
-					text: 'Work it harder.',
-					isChecked: true,
-				},
-				{
-					id: '2',
-					text: 'Make it better.',
-					isChecked: false,
-				},
-				{
-					id: '3',
-					text: 'Do it faster.',
-					isChecked: false,
-				},
-				{
-					id: '4',
-					text: 'Makes us stronger.',
-					isChecked: false,
-				},
-			],
+			todos: [],
 			filter: 'all',
 		};
 
@@ -128,6 +107,13 @@ class TodoApp extends React.Component {
 		this.handleCheck = this.handleCheck.bind(this);
 		this.handleRemove = this.handleRemove.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+	componentDidMount() {
+		fetch('http://localhost:8001/todos')
+			.then(response => response.json())
+			.then(todos => {
+				this.setState({ todos });
+			});
 	}
 
 	handleTabClick(filter) {
