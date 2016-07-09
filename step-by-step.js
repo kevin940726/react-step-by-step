@@ -5,7 +5,17 @@ const marked = require('marked');
 const TerminalRenderer = require('marked-terminal');
 const fs = require('fs');
 
-marked.setOptions({ renderer: new TerminalRenderer() });
+marked.setOptions({
+	renderer: new TerminalRenderer({
+		heading: chalk.magenta.underline.bold,
+		blockquote: chalk.green.underline.italic,
+		link: chalk.underline.white.bgBlue,
+		href: chalk.underline.white.bgBlue,
+		code: chalk.bgWhite.black,
+		codespan: chalk.bgWhite.black,
+		strong: chalk.bold.yellow,
+	}),
+});
 
 const question = {
 	type: 'list',
