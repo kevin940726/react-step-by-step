@@ -1,6 +1,11 @@
 const inquirer = require('inquirer');
 const shelljs = require('shelljs');
 const chalk = require('chalk');
+const marked = require('marked');
+const TerminalRenderer = require('marked-terminal');
+const fs = require('fs');
+
+marked.setOptions({ renderer: new TerminalRenderer() });
 
 const question = {
 	type: 'list',
@@ -120,10 +125,13 @@ const prompt = defaultStep => {
 
 		console.log(chalk.dim('===================================================================='));
 		console.log(chalk.gray(`You are now in ${chalk.bold(`STEP ${answer.step}`)}`));
-		console.log(chalk.underline('In this step:'));
-		console.log(chalk.green(`\t${answer.description}`));
-		console.log(chalk.dim('===================================================================='));
-		prompt(answer.index);
+		fs.readFile('./README.md', 'utf-8', (err, data) => {
+			if (err) throw err;
+
+			console.log(marked(data));
+			console.log(chalk.dim('===================================================================='));
+			prompt(answer.index);
+		});
 	});
 };
 
