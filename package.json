@@ -1,7 +1,7 @@
 {
-  "name": "web-boilerplate",
+  "name": "react-step-by-step",
   "version": "1.0.0",
-  "description": "Boilerplate for ReactJS project with hot code reloading",
+  "description": "React step-by-step tutorial of building a TODO app with best practice in 8 simple steps.",
   "scripts": {
     "start": "node server.js",
     "clean": "rm -rf dist/*",
