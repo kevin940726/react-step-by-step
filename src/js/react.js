@@ -99,6 +99,7 @@ class TodoApp extends React.Component {
 		super();
 
 		this.state = {
+			/* remove the initial state as we will load them asynchronously */
 			todos: [],
 			filter: 'all',
 		};
@@ -108,10 +109,18 @@ class TodoApp extends React.Component {
 		this.handleRemove = this.handleRemove.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
+	/* this function will run immediately after component mount,
+	 * at the same time we want to load the data and set the state,
+	 * the reason why we want to load it after mount is because so
+	 * that it won't block the UI while loading the data,
+	 * and we can handle additional loading state if we want */
 	componentDidMount() {
+		/* we use the fetch api to get from our fake api server,
+		 * the fake database is located at db.json under root directory */
 		fetch('http://localhost:8001/todos')
 			.then(response => response.json())
 			.then(todos => {
+				/* call the setState function to load our new todo data into state */
 				this.setState({ todos });
 			});
 	}
