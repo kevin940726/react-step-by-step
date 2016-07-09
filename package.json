@@ -8,7 +8,8 @@
     "prebuild": "npm run clean",
     "build": "NODE_ENV=production webpack --config webpack-prod.config.js",
     "lint": "eslint src && stylelint src/**/*.css",
-    "json-server": "json-server -w db.json -p 8001"
+    "json-server": "json-server -w db.json -p 8001",
+		"step-by-step": "node step-by-step.js"
   },
   "pre-push": [
     "lint"
