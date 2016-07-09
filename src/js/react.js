@@ -30,11 +30,13 @@ class TodoApp extends React.Component {
 					isChecked: false,
 				},
 			],
+			/* create a new state to store the value of our input */
 			value: '',
 		};
 
 		this.handleCheck = this.handleCheck.bind(this);
 		this.handleRemove = this.handleRemove.bind(this);
+		/* remember to bind them! */
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleChange = this.handleChange.bind(this);
 	}
@@ -54,6 +56,8 @@ class TodoApp extends React.Component {
 			todos: this.state.todos.filter(todo => todo.id !== id),
 		});
 	}
+	/* the submit handler, we generate a new id with `shortid`,
+	 * and we push a new todo with text of `value`, then we clear the input */
 	handleSubmit(e) {
 		e.preventDefault();
 
@@ -65,6 +69,7 @@ class TodoApp extends React.Component {
 			value: '',
 		});
 	}
+	/* whenever the input box changed, it will fire this event and store the value to state */
 	handleChange(e) {
 		this.setState({ value: e.target.value });
 	}
@@ -102,6 +107,7 @@ class TodoApp extends React.Component {
 				</div>
 
 				<form className="control" onSubmit={this.handleSubmit}>
+					{/* we can control the value of the input by specifying the `value` key */}
 					<input
 						id="input-todo"
 						className="input"
