@@ -31,9 +31,11 @@ class TodoApp extends React.Component {
 				},
 			],
 			value: '',
+			/* create a new state to store the current filter */
 			filter: 'all',
 		};
 
+		/* don't forget to bind this! */
 		this.handleTabClick = this.handleTabClick.bind(this);
 		this.handleCheck = this.handleCheck.bind(this);
 		this.handleRemove = this.handleRemove.bind(this);
@@ -41,6 +43,7 @@ class TodoApp extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 	}
 
+	/* pretty straight-forward function */
 	handleTabClick(filter) {
 		this.setState({ filter });
 	}
@@ -79,6 +82,8 @@ class TodoApp extends React.Component {
 			<div className="box">
 				<div className="tabs is-centered">
 					<ul>
+						{/* bind each tab to different filter,
+							* also toggle the class to active according to filter */}
 						<li
 							className={this.state.filter === 'all' ?
 								'is-active' : ''}
@@ -98,6 +103,7 @@ class TodoApp extends React.Component {
 				</div>
 
 				<div className="content">
+					{/* change the todos to display according to filter */}
 					{this.state.todos.filter(todo => {
 						if (this.state.filter === 'all') {
 							return true;
