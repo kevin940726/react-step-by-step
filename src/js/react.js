@@ -2,6 +2,8 @@
 import React from 'react';
 import '../css/todo.global.css';
 
+/* copy paste the mockup into the component,
+ * convert all `class` into `className` (because JSX) */
 const TodoApp = () => (
 	<div className="box">
 		<div className="tabs is-centered">
