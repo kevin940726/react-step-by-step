@@ -3,6 +3,7 @@ import React from 'react';
 import { generate } from 'shortid';
 import '../css/todo.global.css';
 
+/* Tabs component */
 const Tabs = ({ filter, handleTabClick }) => (
 	<div className="tabs is-centered">
 		<ul>
@@ -25,6 +26,7 @@ const Tabs = ({ filter, handleTabClick }) => (
 	</div>
 );
 
+/* Todos component */
 const Todos = ({ todos, filter, handleCheck, handleRemove }) => (
 	<div className="content">
 		{todos.filter(todo => {
@@ -57,6 +59,8 @@ const Todos = ({ todos, filter, handleCheck, handleRemove }) => (
 	</div>
 );
 
+/* AddTodo component,
+ * make it a class to let it manage it's own state */
 class AddTodo extends React.Component {
 	constructor(props) {
 		super(props);
@@ -94,6 +98,7 @@ class AddTodo extends React.Component {
 	}
 }
 
+/* root component */
 class TodoApp extends React.Component {
 	constructor() {
 		super();
