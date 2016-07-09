@@ -2,10 +2,17 @@
 import React from 'react';
 import '../css/todo.global.css';
 
+/* convert your component to a component class to manage the state */
 class TodoApp extends React.Component {
+	/* add a constructor to your component,
+	 * this function will initialize the setup */
 	constructor() {
+		/* call super() to make `this` local,
+		 * quite fixed usage, just remember to do it */
 		super();
 
+		/* set up the initial state of your component,
+		 * your state must be a object */
 		this.state = {
 			todos: [
 				{
@@ -44,7 +51,12 @@ class TodoApp extends React.Component {
 				</div>
 
 				<div className="content">
+					{/* map through your state and create a list of component from it,
+						* React will automatically render all of the items in it */}
 					{this.state.todos.map(todo => (
+						/* each of your item must contain a `key` attribute,
+						 * and the value of it must be unique,
+						 * in here, we simply assign it to the id of each todo */
 						<p key={todo.id} className="control">
 							<label className="checkbox">
 								<input
