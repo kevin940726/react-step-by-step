@@ -4,6 +4,17 @@ import { install } from 'offline-plugin/runtime';
 import 'sanitize.css/sanitize.css';
 import 'bulma/css/bulma.css';
 import './style.global.css';
+import README from '../README.md';
+import marked from 'marked';
+
+document.getElementById('readme').innerHTML = marked(README);
+
+if (module.hot) {
+	module.hot.accept('../README.md', () => {
+		const NEW_README = require('../README.md');
+		document.getElementById('readme').innerHTML = marked(NEW_README);
+	});
+}
 
 const routingCallback = (view, data = {}) => (ctx, next) => {
 	require.ensure([], require => {
