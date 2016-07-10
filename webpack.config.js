@@ -75,7 +75,6 @@ module.exports = {
 			}),
 			require("postcss-url")(),
 			require("postcss-cssnext")(),
-			require('postcss-flexibility'),
 			require("postcss-browser-reporter")(),
 			require("postcss-reporter")(),
 		]
