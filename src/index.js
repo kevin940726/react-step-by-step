@@ -43,6 +43,16 @@ page('/react', routingCallback('react'), () => {
 			<TodoApp />,
 			document.getElementById('root')
 		);
+
+		if (module.hot) {
+			module.hot.accept('./js/react', () => {
+				const HotTodoApp = require('./js/react').default;
+				render(
+					<HotTodoApp />,
+					document.getElementById('root')
+				);
+			});
+		}
 	});
 });
 page('*', routingCallback('home'), noop);
