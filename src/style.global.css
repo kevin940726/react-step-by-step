@@ -12,8 +12,49 @@ body {
 body {
 	font-family: 'Roboto', 'Noto Sans TC', sans-serif;
 	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+#container {
+	display: flex;
+	width: 90vw;
+	height: 90vh;
 	justify-content: center;
 	align-items: center;
+}
+
+#readme {
+	height: 100%;
+	flex-basis: 50%;
+	overflow: scroll;
+	line-height: 1.6;
+	margin-bottom: 0;
+
+	& h1 {
+		font-size: 25px;
+		font-weight: bold;
+		border-bottom: 1px solid #EEE;
+		margin-bottom: 15px;
+	}
+
+	& h2 {
+		font-size: 20px;
+		font-weight: bold;
+		border-bottom: 1px solid #EEE;
+		margin-bottom: 10px;
+	}
+
+	& blockquote {
+		padding: 0 15px;
+		color: #777;
+		border-left: 4px solid #DDD;
+	}
+
+	& p,
+	& pre {
+		margin-bottom: 20px;
+	}
 }
 
 #app {
@@ -22,6 +63,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	padding: 30px;
+	margin: 0 5%;
 }
 
 nav.nav {
