@@ -1,21 +1,6 @@
 const inquirer = require('inquirer');
 const shelljs = require('shelljs');
 const chalk = require('chalk');
-const marked = require('marked');
-const TerminalRenderer = require('marked-terminal');
-const fs = require('fs');
-
-marked.setOptions({
-	renderer: new TerminalRenderer({
-		heading: chalk.magenta.underline.bold,
-		blockquote: chalk.green.underline.italic,
-		link: chalk.underline.white.bgBlue,
-		href: chalk.underline.white.bgBlue,
-		code: chalk.bgWhite.black,
-		codespan: chalk.bgWhite.black,
-		strong: chalk.bold.yellow,
-	}),
-});
 
 const question = {
 	type: 'list',
@@ -128,20 +113,15 @@ const prompt = defaultStep => {
 		const lastStep = question.choices[(answer.index || 1) - 1].value.hash;
 
 		shelljs.exec(
-			`git checkout -f ${lastStep};
-			git diff ${lastStep} ${answer.hash} | git apply`,
+			`git checkout -f ${lastStep} && git diff ${lastStep} ${answer.hash} | git apply`,
 			{ silent: true }
 		);
 
 		console.log(chalk.dim('===================================================================='));
 		console.log(chalk.gray(`You are now in ${chalk.bold(`STEP ${answer.step}`)}`));
-		fs.readFile('./README.md', 'utf-8', (err, data) => {
-			if (err) throw err;
-
-			console.log(marked(data));
-			console.log(chalk.dim('===================================================================='));
-			prompt(answer.index);
-		});
+		console.log(chalk.green(`\t${answer.description}`));
+		console.log(chalk.dim('===================================================================='));
+		prompt(answer.index);
 	});
 };
 
